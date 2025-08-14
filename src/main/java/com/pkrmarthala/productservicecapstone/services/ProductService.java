@@ -11,10 +11,11 @@ public interface ProductService {
 
     public List<Product> getAllProducts();
 
-    public Product createProduct(String name,
-                                                     String description,
-                                                     double price,
-                                                     String category,
-                                                     String imageUrl
+    public Product createProduct(long id,
+                                    String name,
+                                    String description,
+                                    double price,
+                                    String category,
+                                    String imageUrl
     );
 }

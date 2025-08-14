@@ -1,12 +1,11 @@
 package com.pkrmarthala.productservicecapstone.controllers;
 
 import com.pkrmarthala.productservicecapstone.dtos.CreateProductRequestDto;
-import com.pkrmarthala.productservicecapstone.dtos.ErrorDto;
-import com.pkrmarthala.productservicecapstone.dtos.FakeStoreProductRequestDto;
 import com.pkrmarthala.productservicecapstone.dtos.ProductResponseDto;
 import com.pkrmarthala.productservicecapstone.exceptions.ProductNotFoundException;
 import com.pkrmarthala.productservicecapstone.models.Product;
 import com.pkrmarthala.productservicecapstone.services.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class ProductController {
 
     ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("productDBService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -62,8 +61,10 @@ public class ProductController {
     @PostMapping("/products")
     public ProductResponseDto createProduct(@RequestBody
                             CreateProductRequestDto createProductRequestDto)
+            throws ProductNotFoundException
     {
         Product product = productService.createProduct(
+                createProductRequestDto.getId(),
                 createProductRequestDto.getName(),
                 createProductRequestDto.getDescription(),
                 createProductRequestDto.getPrice(),
