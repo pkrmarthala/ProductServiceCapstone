@@ -64,10 +64,10 @@ public class ProductController {
             throws ProductNotFoundException
     {
         Product product = productService.createProduct(
-                createProductRequestDto.getId(),
                 createProductRequestDto.getName(),
                 createProductRequestDto.getDescription(),
                 createProductRequestDto.getPrice(),
+                createProductRequestDto.getQuantity(),
                 createProductRequestDto.getCategory(),
                 createProductRequestDto.getImageUrl()
         );
@@ -77,4 +77,32 @@ public class ProductController {
         return productResponseDto;
 
     }
+
+    @PatchMapping("/products/{id}")
+    public ProductResponseDto updateProduct(
+            @PathVariable long id,
+            @RequestBody CreateProductRequestDto createProductRequestDto)
+            throws ProductNotFoundException
+    {
+        Product product = productService.updateProduct(
+                id,
+                createProductRequestDto.getName(),
+                createProductRequestDto.getDescription(),
+                createProductRequestDto.getPrice(),
+                createProductRequestDto.getQuantity(),
+                createProductRequestDto.getCategory(),
+                createProductRequestDto.getImageUrl()
+        );
+
+        ProductResponseDto productResponseDto = ProductResponseDto.fromProduct(product);
+
+        return productResponseDto;
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ProductResponseDto deleteProductById(@PathVariable Long id) throws ProductNotFoundException {
+        Product product = productService.deleteProductById(id);
+        return ProductResponseDto.fromProduct(product);
+    }
+
 }

@@ -10,6 +10,7 @@ public class CreateProductRequestDto {
     private String name;
     private String description;
     private double price;
+    private long quantity;
     private String imageUrl;
     private String category;
 

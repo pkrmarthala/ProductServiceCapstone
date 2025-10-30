@@ -52,16 +52,16 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public Product createProduct(long id, String name,
+    public Product createProduct(String name,
                                                      String description,
                                                      double price,
+                                                    long quantity,
                                                      String category,
                                                      String imageUrl)
     {
         FakeStoreProductRequestDto fakestoreProductRequestDto =
                 new FakeStoreProductRequestDto();
 
-        fakestoreProductRequestDto.setId(id);
         fakestoreProductRequestDto.setTitle(name);
         fakestoreProductRequestDto.setPrice(price);
         fakestoreProductRequestDto.setDescription(description);
@@ -76,6 +76,16 @@ public class FakeStoreProductService implements ProductService {
                         FakeStoreProductResponseDto.class);
 
         return fakeStoreProductResponseDto.toProduct();
+    }
+
+    @Override
+    public Product updateProduct(long id, String name, String description, double price, long quantity, String category, String imageUrl) throws ProductNotFoundException {
+        return null;
+    }
+
+    @Override
+    public Product deleteProductById(Long id) throws ProductNotFoundException {
+        return null;
     }
 
 }

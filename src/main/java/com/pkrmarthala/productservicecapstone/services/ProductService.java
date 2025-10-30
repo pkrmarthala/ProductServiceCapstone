@@ -11,11 +11,23 @@ public interface ProductService {
 
     public List<Product> getAllProducts();
 
-    public Product createProduct(long id,
-                                    String name,
+    public Product createProduct(String name,
                                     String description,
                                     double price,
+                                    long quantity,
                                     String category,
                                     String imageUrl
     );
+
+    public Product updateProduct(
+            long id,
+            String name,
+            String description,
+            double price,
+            long quantity,
+            String category,
+            String imageUrl
+    ) throws ProductNotFoundException;
+
+    public Product deleteProductById(Long id) throws ProductNotFoundException;
 }
