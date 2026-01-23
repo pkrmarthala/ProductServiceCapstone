@@ -36,7 +36,7 @@ public class ProductDBService implements ProductService
         if (optionalProduct.isEmpty())
             throw new ProductNotFoundException("Product with id: " + id + " does not exist in the database.");
         Product product = optionalProduct.get();
-        if(!product.isDeleted()) {
+        if(product.isDeleted()) {
             throw new ProductNotFoundException("Product with id: " + id + " does not exist in the database.");
         }
         return product;

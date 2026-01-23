@@ -24,7 +24,7 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponseDto>
-            getProductById(@PathVariable("id") long id)
+    getProductById(@PathVariable("id") long id)
             throws ProductNotFoundException
     {
 
@@ -48,7 +48,9 @@ public class ProductController {
 
         List<ProductResponseDto> productResponseDtos = new ArrayList<>();
 
-        productResponseDtos = products.stream().map(ProductResponseDto::fromProduct).toList();
+        productResponseDtos = products.stream()
+                .map(ProductResponseDto::fromProduct)
+                .toList();
 //
 //        for (Product product : products) {
 //            ProductResponseDto productResponseDto = ProductResponseDto.fromProduct(product);
@@ -72,9 +74,7 @@ public class ProductController {
                 createProductRequestDto.getImageUrl()
         );
 
-        ProductResponseDto productResponseDto = ProductResponseDto.fromProduct(product);
-
-        return productResponseDto;
+        return ProductResponseDto.fromProduct(product);
 
     }
 
@@ -94,9 +94,7 @@ public class ProductController {
                 createProductRequestDto.getImageUrl()
         );
 
-        ProductResponseDto productResponseDto = ProductResponseDto.fromProduct(product);
-
-        return productResponseDto;
+        return ProductResponseDto.fromProduct(product);
     }
 
     @DeleteMapping("/products/{id}")
