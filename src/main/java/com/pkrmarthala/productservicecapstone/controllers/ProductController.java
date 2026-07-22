@@ -1,5 +1,6 @@
 package com.pkrmarthala.productservicecapstone.controllers;
 
+import com.pkrmarthala.productservicecapstone.commons.ApplicationCommons;
 import com.pkrmarthala.productservicecapstone.dtos.CreateProductRequestDto;
 import com.pkrmarthala.productservicecapstone.dtos.ProductResponseDto;
 import com.pkrmarthala.productservicecapstone.exceptions.ProductNotFoundException;
@@ -17,16 +18,23 @@ import java.util.List;
 public class ProductController {
 
     ProductService productService;
+    ApplicationCommons applicationCommons;
 
-    public ProductController(@Qualifier("productDBService") ProductService productService) {
+    public ProductController(@Qualifier("fakeStoreProductService")
+                             ProductService productService,
+                             ApplicationCommons applicationCommons) {
         this.productService = productService;
+        this.applicationCommons = applicationCommons;
     }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponseDto>
-    getProductById(@PathVariable("id") long id)
+    getProductById(@PathVariable("id") long id,
+                   @RequestHeader("Authorization") String token )
             throws ProductNotFoundException
     {
+        // validating the token
+        applicationCommons.validateToken(token);
 
         Product product = productService.getProductById(id);
         ProductResponseDto productResponseDto = ProductResponseDto.fromProduct(product);

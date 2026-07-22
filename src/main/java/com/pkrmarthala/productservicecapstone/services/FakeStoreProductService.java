@@ -4,6 +4,8 @@ import com.pkrmarthala.productservicecapstone.dtos.FakeStoreProductRequestDto;
 import com.pkrmarthala.productservicecapstone.dtos.FakeStoreProductResponseDto;
 import com.pkrmarthala.productservicecapstone.exceptions.ProductNotFoundException;
 import com.pkrmarthala.productservicecapstone.models.Product;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,12 +16,22 @@ import java.util.List;
 public class FakeStoreProductService implements ProductService {
 
     RestTemplate restTemplate;
+    RedisTemplate<String, Object> redisTemplate;
 
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(@Qualifier("getRestTemplate") RestTemplate restTemplate,
+                                   RedisTemplate<String, Object> redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     public Product getProductById(long id) throws ProductNotFoundException {
+
+        Product productFromCache = (Product) redisTemplate.opsForValue().get("Product_"+ String.valueOf(id));
+        if (productFromCache != null) {
+            System.out.println("Product_"+ String.valueOf(id) +" fetched from the Cache");
+            return productFromCache;
+        }
+
         FakeStoreProductResponseDto fakeStoreProductResponseDto =
                 restTemplate.getForObject(
                         "https://fakestoreapi.com/products/" + id,
@@ -29,7 +41,11 @@ public class FakeStoreProductService implements ProductService {
         if(fakeStoreProductResponseDto == null) {
             throw new ProductNotFoundException("The product for id: " + id + " does not exist!");
         }
-        return fakeStoreProductResponseDto.toProduct();
+
+        Product productFromFakeStore = fakeStoreProductResponseDto.toProduct();
+        redisTemplate.opsForValue().set("Product_"+ String.valueOf(id), productFromFakeStore);
+        System.out.println("Product_"+ String.valueOf(id) +" fetched from the DB");
+        return productFromFakeStore;
 
     }
 

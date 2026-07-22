@@ -38,7 +38,7 @@ public class ProductControllerTest {
 
         when(productService.getProductById(1L)).thenReturn(dummyProduct);
 
-        ProductResponseDto productResponseDto = productController.getProductById(1L).getBody();
+        ProductResponseDto productResponseDto = productController.getProductById(1L, "").getBody();
 
         assertAll(
                 () -> assertEquals(1L, productResponseDto.getId()),
@@ -61,7 +61,7 @@ public class ProductControllerTest {
         when(productService.getProductById(1L)).thenThrow(ProductNotFoundException.class);
 
         // ProductResponseDto productResponseDto = productController.getProductById(1L);
-        assertThrows(ProductNotFoundException.class, () -> productController.getProductById(1L));
+        assertThrows(ProductNotFoundException.class, () -> productController.getProductById(1L, ""));
 
         verify(productService, times(1)).getProductById(1L);
     }
@@ -70,14 +70,14 @@ public class ProductControllerTest {
     public void testGetProductByIdHandlesNullGracefully() throws ProductNotFoundException {
         when(productService.getProductById(1L)).thenReturn(null) ;
 
-        assertThrows(Exception.class, () -> productController.getProductById(1L));
+        assertThrows(Exception.class, () -> productController.getProductById(1L, ""));
 
         verify(productService, times(1)).getProductById(1L);
     }
 
     @Test
     public void testGetProductByIdWithInvalidId() throws ProductNotFoundException {
-        assertThrows(IllegalArgumentException.class, () -> productController.getProductById(0L));
+        assertThrows(IllegalArgumentException.class, () -> productController.getProductById(0L, ""));
         verify(productService, never()).getProductById(anyLong());
     }
 
